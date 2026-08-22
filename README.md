@@ -7,26 +7,55 @@ decides the points for that round.
 
 ## Run locally
 
+Requirements: Node.js 18+ and npm. MongoDB is optional.
+
 **Backend**
+
 ```bash
 cd backend
-cp .env.example .env
 npm install
 npm run dev        # http://localhost:5000
 ```
 
 **Frontend**
+
 ```bash
 cd frontend
-cp .env.example .env
 npm install
 npm run dev         # http://localhost:5173
 ```
 
-MongoDB is optional for local play — the server runs fine without it and
-just skips persisting room/round/game history.
+Open `http://localhost:5173` after both processes are running. The frontend
+connects to `http://localhost:5000` by default.
 
-## What's implemented (Phases 1–4 of the build plan)
+MongoDB is optional for local play: the server runs without it and skips
+persisting room, round, and game history.
+
+## Configuration
+
+The default local configuration needs no environment file. Optional backend
+variables are `PORT`, `CLIENT_URL`, and `MONGO_URI`. Set `VITE_SERVER_URL` in
+the frontend environment when the backend runs at a different URL.
+
+## Test and build
+
+Backend tests:
+
+```bash
+cd backend
+npm test
+```
+
+Frontend tests and production build:
+
+```bash
+cd frontend
+npm test
+npm run build
+```
+
+## What's implemented
+
 - Full server-authoritative game engine: dealing, clockwise turn-based
   passing, continuous match detection, freeze-on-match, timed press-order
   scoring, multi-round progression, final winner calculation.
@@ -39,13 +68,10 @@ just skips persisting room/round/game history.
   table, clockwise-aware turn indicator, hand UI, live match button with
   countdown, scoreboard, round-result and final-winner modals.
 
-## Not yet built (Phases 5–6 of the original plan)
-- Automated test suite (unit tests for `GameEngine`, integration tests for
-  socket flows, load/race-condition tests for simultaneous match presses).
-- Production deployment configs (Render/Vercel/Railway env setup, Socket.IO
-  sticky-session or Redis-adapter configuration for multi-instance hosting).
+## Deployment notes
 
-Both were intentionally left out of this delivery so the core game logic
-could be reviewed first — happy to build either next.
+Production deployment configuration is not included. A multi-instance
+deployment needs shared room state and a Socket.IO Redis adapter; see
+`backend/README.md` for the scaling boundary.
 
 See `backend/README.md` and `frontend/README.md` for architecture detail.
